@@ -74,5 +74,35 @@ namespace Flag.Test
             Assert.Throws<InvalidDataException>(() => parser.Parser(new string[] {}));
             Assert.Throws<InvalidDataException>(() => parser.Parser(new[] { "-f", "-flag" }));
         }
+
+        [Fact]
+        public void should_return_false_when_get_flag_value_with_wrong_parameters()
+        {
+            var fullName = "flag";
+            var abbrName = "f";
+            var description = "the first flag";
+
+            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-f" });
+
+            Assert.True(result.IsSuccess);
+            Assert.True(result.GetFlagValue("--flag"));
+            Assert.False(result.GetFlagValue("--f"));
+            Assert.False(result.GetFlagValue("-flag"));
+            Assert.False(result.GetFlagValue("-v"));
+        }
+
+        [Fact]
+        public void should_throw_exception_and_get_message_when_the_parse_parameter_is_invalid()
+        {
+            var fullName = "flag";
+            var abbrName = "f";
+            var description = "the first flag";
+
+            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
+
+            Assert.Throws<InvalidDataException>(() => parser.Parser(new []{"-v"}));
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Reflection;
 
 namespace Flag
 {
@@ -29,7 +30,7 @@ namespace Flag
             {
                 return new ArgsParsingResult(true, $"--{FullName}", $"-{AbbreviationName}");
             }
-            return new ArgsParsingResult();
+            throw new InvalidDataException($"can not parse flag {flags[0]}");
         }
     }
 }
