@@ -31,5 +31,23 @@ namespace Flag.Test
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("-f"));
         }
+
+        [Fact]
+        void should_parse_success_and_can_get_flag_value_when_flag_has_two_valid_names()
+        {
+            var fullName = "flag";
+            var abbrName = "f";
+            var description = "the first flag";
+
+            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-f" });
+            Assert.True(result.IsSuccess);
+            Assert.True(result.GetFlagValue("--flag"));
+
+            ArgsParsingResult result2 = parser.Parser(new[] { "--flag" });
+            Assert.True(result2.IsSuccess);
+            Assert.True(result2.GetFlagValue("-f"));
+        }
     }
 }
