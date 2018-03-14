@@ -10,6 +10,16 @@ namespace Flag
         string abbrNamePattern = @"^[a-zA-Z]$";
         public ArgsParserBuilder AddFlagOption(string fullName, string abbreviationName, string description)
         {
+            ValidFlagName(fullName, abbreviationName);
+
+            parser.FullName = fullName;
+            parser.AbbreviationName = abbreviationName;
+            parser.Description = description;
+            return this;
+        }
+
+        void ValidFlagName(string fullName, string abbreviationName)
+        {
             if (fullName == null && abbreviationName == null)
             {
                 throw new InvalidDataException();
@@ -24,11 +34,6 @@ namespace Flag
             {
                 throw new InvalidDataException();
             }
-
-            parser.FullName = fullName;
-            parser.AbbreviationName = abbreviationName;
-            parser.Description = description;
-            return this;
         }
 
         public ArgsParser Build()
