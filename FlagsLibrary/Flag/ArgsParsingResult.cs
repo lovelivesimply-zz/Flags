@@ -6,7 +6,7 @@
 
         public bool GetFlagValue(string flag)
         {
-            if ($"--{ArgsParserBuilder.parser.FullName}" == flag)
+            if ($"--{ArgsParserBuilder.parser.FullName}" == flag || $"-{ArgsParserBuilder.parser.AbbreviationName}" == flag)
             {
                 return true;
             }

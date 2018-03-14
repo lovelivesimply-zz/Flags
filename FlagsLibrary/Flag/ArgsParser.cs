@@ -25,7 +25,7 @@ namespace Flag
             {
                 throw new InvalidOperationException();
             }
-            if (flags[0] == $"--{FullName}")
+            if (flags[0] == $"--{FullName}" || flags[0] == $"-{AbbreviationName}")
             {
                 parsingResult.IsSuccess = true;
             }
