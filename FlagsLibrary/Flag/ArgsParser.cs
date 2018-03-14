@@ -21,11 +21,7 @@ namespace Flag
 
         public ArgsParsingResult Parser(string[] flags)
         {
-            if (flags.Length != 1)
-            {
-                throw new InvalidOperationException();
-            }
-            if (flags[0] == $"--{FullName}")
+            if (flags[0] == $"--{FullName}" || flags[0] == $"-{AbbreviationName}")
             {
                 parsingResult.IsSuccess = true;
             }

@@ -5,7 +5,7 @@ namespace Flag.Test
     public class FlagParserFacts
     {
         [Fact]
-        void should_success_and_get_flag_value_when_has_flag_full_name()
+        void should_parse_success_and_get_flag_value_when_has_flag_full_name()
         {
             var fullName = "flag";
             var description = "the first flag";
@@ -16,6 +16,20 @@ namespace Flag.Test
 
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("--flag"));
+        }
+
+        [Fact]
+        void should_parse_success_and_can_get_flag_value_when_flag_has_abbreviation_name()
+        {
+            var abbrName = "f";
+            var description = "the first flag";
+
+            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(null, abbrName, description).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-f" });
+
+            Assert.True(result.IsSuccess);
+            Assert.True(result.GetFlagValue("-f"));
         }
     }
 }
