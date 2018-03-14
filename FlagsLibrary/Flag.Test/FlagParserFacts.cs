@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 
 namespace Flag.Test
 {
@@ -57,6 +58,14 @@ namespace Flag.Test
 
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("-f"));
+        }
+
+        [Fact]
+        void should_throw_exception_when_add_flag_with_abbreviation_and_full_name_are_all_null()
+        {
+            var description = "the first flag";
+
+            Assert.Throws<Exception>(() => new ArgsParserBuilder().AddFlagOption(null, null, description).Build());
         }
     }
 }
