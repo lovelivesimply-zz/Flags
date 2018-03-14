@@ -61,5 +61,18 @@ namespace Flag.Test
             Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption("flag", "ff", "description"));
             Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption("-flag", "f", "description"));
         }
+
+        [Fact]
+        public void should_throw_exception_when_parse_parameters_is_empty_or_multiple()
+        {
+            var fullName = "flag";
+            var abbrName = "f";
+            var description = "the first flag";
+
+            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
+
+            Assert.Throws<InvalidDataException>(() => parser.Parser(new string[] {}));
+            Assert.Throws<InvalidDataException>(() => parser.Parser(new[] { "-f", "-flag" }));
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Flag
+﻿using System.IO;
+
+namespace Flag
 {
     public class ArgsParser
     {
@@ -19,6 +21,10 @@
 
         public ArgsParsingResult Parser(string[] flags)
         {
+            if (flags.Length != 1)
+            {
+                throw new InvalidDataException();
+            }
             if (flags[0] == $"--{FullName}" || flags[0] == $"-{AbbreviationName}")
             {
                 return new ArgsParsingResult(true, $"--{FullName}", $"-{AbbreviationName}");
