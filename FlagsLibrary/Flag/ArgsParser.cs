@@ -1,13 +1,15 @@
-﻿using System;
-
-namespace Flag
+﻿namespace Flag
 {
     public class ArgsParser
     {
         public string FullName { get; set; }
         public string AbbreviationName { get; set; }
         public string Description { get; set; }
-        private ArgsParsingResult parsingResult = new ArgsParsingResult();
+
+        public ArgsParser()
+        {
+        }
+
         public ArgsParser(string fullName, string abbreviationName, string description)
         {
             this.FullName = fullName;
@@ -15,17 +17,13 @@ namespace Flag
             this.Description = description;
         }
 
-        public ArgsParser()
-        {
-        }
-
         public ArgsParsingResult Parser(string[] flags)
         {
             if (flags[0] == $"--{FullName}" || flags[0] == $"-{AbbreviationName}")
             {
-                parsingResult.IsSuccess = true;
+                return new ArgsParsingResult(true, $"--{FullName}", $"-{AbbreviationName}");
             }
-            return parsingResult;
+            return new ArgsParsingResult();
         }
     }
 }

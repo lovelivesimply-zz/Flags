@@ -1,16 +1,26 @@
-﻿namespace Flag
+﻿using System.Collections.Generic;
+
+namespace Flag
 {
     public class ArgsParsingResult
     {
+        readonly HashSet<string> flagValues = new HashSet<string>();
+        public ArgsParsingResult()
+        {
+        }
+
+        public ArgsParsingResult(bool isSuccess, string fullName, string abbreviationName)
+        {
+            IsSuccess = isSuccess;
+            flagValues.Add(fullName);
+            flagValues.Add(abbreviationName);
+        }
+
         public bool IsSuccess { get; set; }
 
         public bool GetFlagValue(string flag)
         {
-            if ($"--{ArgsParserBuilder.parser.FullName}" == flag || $"-{ArgsParserBuilder.parser.AbbreviationName}" == flag)
-            {
-                return true;
-            }
-            return false;
+            return flagValues.Contains(flag);
         }
     }
 }
