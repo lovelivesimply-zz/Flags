@@ -4,20 +4,7 @@ namespace Flag
 {
     public class ArgsParser
     {
-        private string FullName { get; set; }
-        private string AbbreviationName { get; set; }
-        private string Description { get; set; }
-
-        public ArgsParser()
-        {
-        }
-
-        public ArgsParser(string fullName, string abbreviationName, string description)
-        {
-            FullName = fullName;
-            AbbreviationName = abbreviationName;
-            Description = description;
-        }
+        internal FlagOption flagOption; // currently is single, will be an array later.
 
         public ArgsParsingResult Parser(string[] flags)
         {
@@ -25,9 +12,9 @@ namespace Flag
             {
                 throw new InvalidDataException();
             }
-            if (flags[0] == $"--{FullName}" || flags[0] == $"-{AbbreviationName}")
+            if (flags[0] == $"--{flagOption.FullName}" || flags[0] == $"-{flagOption.AbbreviationName}")
             {
-                return new ArgsParsingResult(true, $"--{FullName}", $"-{AbbreviationName}");
+                return new ArgsParsingResult(true, flagOption);
             }
             throw new InvalidDataException($"can not parse flag {flags[0]}");
         }

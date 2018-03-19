@@ -1,18 +1,17 @@
 using System;
-using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Flag
 {
     public class ArgsParserBuilder
     {
-        private ArgsParser parser;
+        private readonly ArgsParser parser = new ArgsParser();
         string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
         string abbrNamePattern = @"^[a-zA-Z]$";
         public ArgsParserBuilder AddFlagOption(string fullName, string abbreviationName, string description)
         {
             ValidFlagName(fullName, abbreviationName);
-            parser = new ArgsParser(fullName, abbreviationName, description);
+            parser.flagOption = new FlagOption(fullName, abbreviationName, description);
             return this;
         }
 

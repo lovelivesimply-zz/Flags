@@ -18,6 +18,7 @@ namespace Flag.Test
 
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("--flag"));
+            Assert.Null(result.Error);
         }
 
         [Fact]
@@ -32,6 +33,7 @@ namespace Flag.Test
 
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("-f"));
+            Assert.Null(result.Error);
         }
 
         [Fact]
@@ -46,10 +48,12 @@ namespace Flag.Test
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("--flag"));
+            Assert.Null(result.Error);
 
             ArgsParsingResult result2 = parser.Parser(new[] { "--flag" });
             Assert.True(result2.IsSuccess);
             Assert.True(result2.GetFlagValue("-f"));
+            Assert.Null(result2.Error);
         }
 
         [Fact]
