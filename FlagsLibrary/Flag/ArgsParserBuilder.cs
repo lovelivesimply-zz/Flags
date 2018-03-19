@@ -11,7 +11,7 @@ namespace Flag
         public ArgsParserBuilder AddFlagOption(string fullName, string abbreviationName, string description)
         {
             ValidFlagName(fullName, abbreviationName);
-            parser.flagOption = new FlagOption(fullName, abbreviationName, description);
+            parser.FlagOption = new FlagOption(fullName, abbreviationName, description);
             return this;
         }
 

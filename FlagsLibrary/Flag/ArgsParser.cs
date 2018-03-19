@@ -1,22 +1,37 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Flag
 {
     public class ArgsParser
     {
-        internal FlagOption flagOption; // currently is single, will be an array later.
+        internal FlagOption FlagOption = new FlagOption(); // currently is single, will be an array later.
+        string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
+        string abbrNamePattern = @"^[a-zA-Z]$";
 
         public ArgsParsingResult Parser(string[] flags)
         {
-            if (flags.Length != 1)
+            var argsParsingResult = new ArgsParsingResult();
+
+            foreach (var flag in flags)
             {
-                throw new InvalidDataException();
+                if (!((new Regex(fullNamePattern).IsMatch(flag.Substring(2)) && flag.IndexOf("--", StringComparison.Ordinal) == 0)
+                    || (new Regex(abbrNamePattern).IsMatch(flag.Substring(1)) && flag.IndexOf("-", StringComparison.Ordinal) == 0)))
+                {
+                    argsParsingResult.IsSuccess = false;
+                    argsParsingResult.FlagOption = null;
+                    argsParsingResult.Error = new Error(ParsingErrorCode.InvalidOptionName, flag);
+                    return argsParsingResult;
+                }
+                if (flag == $"--{FlagOption.FullName}" || flag == $"-{FlagOption.AbbreviationName}")
+                {
+                    argsParsingResult.IsSuccess = true;
+                    argsParsingResult.FlagOption = FlagOption;
+                }
             }
-            if (flags[0] == $"--{flagOption.FullName}" || flags[0] == $"-{flagOption.AbbreviationName}")
-            {
-                return new ArgsParsingResult(true, flagOption);
-            }
-            throw new InvalidDataException($"can not parse flag {flags[0]}");
+
+            return argsParsingResult;
         }
     }
 }

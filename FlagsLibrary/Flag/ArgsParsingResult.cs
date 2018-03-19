@@ -1,26 +1,15 @@
-﻿using System.Collections.Generic;
-
-namespace Flag
+﻿namespace Flag
 {
     public class ArgsParsingResult
     {
-        private readonly FlagOption flagOption; // will be an array later
-        public ArgsParsingResult(FlagOption flagOption)
-        {
-            this.flagOption = flagOption;
-        }
-
-        public ArgsParsingResult(bool isSuccess, FlagOption flagOption)
-        {
-            IsSuccess = isSuccess;
-            this.flagOption = flagOption;
-        }
+        internal FlagOption FlagOption; // will be an array later
 
         public bool IsSuccess { get; set; }
 
         public bool GetFlagValue(string flag)
         {
-            return $"--{flagOption.FullName}".Equals(flag) || $"-{flagOption.AbbreviationName}".Equals(flag);
+            if (FlagOption == null) return false;
+            return $"--{FlagOption.FullName}".Equals(flag) || $"-{FlagOption.AbbreviationName}".Equals(flag);
         }
 
         public Error Error { get; set; }
@@ -28,6 +17,12 @@ namespace Flag
 
     public class Error
     {
+        public Error(ParsingErrorCode parsingErrorCode, string trigger)
+        {
+            Code = parsingErrorCode;
+            Trigger = trigger;
+        }
+
         public ParsingErrorCode Code { get; set; }
         public string Trigger { get; set; }
     }
