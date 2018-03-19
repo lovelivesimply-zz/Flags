@@ -55,11 +55,11 @@ namespace Flag.Test
         [Fact]
         public void should_throw_exception_when_add_flag_without_full_name_and_abbr_name()
         {
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption(null, null, "description"));
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption("", null, "description"));
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption(null, "", "description"));
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption("flag", "ff", "description"));
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption("-flag", "f", "description"));
+            Assert.Throws<ArgumentNullException>(() => new ArgsParserBuilder().AddFlagOption(null, null, "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("", null, "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption(null, "", "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("flag", "ff", "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("-flag", "f", "description"));
         }
 
         [Fact]

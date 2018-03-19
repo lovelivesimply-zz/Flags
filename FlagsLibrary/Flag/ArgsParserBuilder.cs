@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -19,17 +20,17 @@ namespace Flag
         {
             if (fullName == null && abbreviationName == null)
             {
-                throw new InvalidDataException();
+                throw new ArgumentNullException();
             }
 
             if (fullName != null && !new Regex(fullNamePattern).IsMatch(fullName))
             {
-                throw new InvalidDataException();
+                throw new ArgumentException();
             }
 
             if (abbreviationName != null && !new Regex(abbrNamePattern).IsMatch(abbreviationName))
             {
-                throw new InvalidDataException();
+                throw new ArgumentException();
             }
         }
 
