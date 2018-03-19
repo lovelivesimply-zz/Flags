@@ -1,36 +1,45 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Flag
 {
     public class ArgsParser
     {
-        public string FullName { get; set; }
-        public string AbbreviationName { get; set; }
-        public string Description { get; set; }
-
-        public ArgsParser()
-        {
-        }
-
-        public ArgsParser(string fullName, string abbreviationName, string description)
-        {
-            this.FullName = fullName;
-            this.AbbreviationName = abbreviationName;
-            this.Description = description;
-        }
+        internal FlagOption FlagOption = new FlagOption(); // currently is single, will be an array later.
+        string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
+        string abbrNamePattern = @"^[a-zA-Z]$";
 
         public ArgsParsingResult Parser(string[] flags)
         {
-            if (flags.Length != 1)
+            var argsParsingResult = new ArgsParsingResult();
+
+            foreach (var flag in flags)
             {
-                throw new InvalidDataException();
+                if (!((new Regex(fullNamePattern).IsMatch(flag.Substring(2)) && flag.IndexOf("--", StringComparison.Ordinal) == 0)
+                    || (new Regex(abbrNamePattern).IsMatch(flag.Substring(1)) && flag.IndexOf("-", StringComparison.Ordinal) == 0)))
+                {
+                    argsParsingResult.IsSuccess = false;
+                    argsParsingResult.FlagOption = null;
+                    argsParsingResult.Error = new Error(ParsingErrorCode.InvalidOptionName, flag);
+                    return argsParsingResult;
+                }
+
+                if (flag != $"--{FlagOption.FullName}" && flag != $"-{FlagOption.AbbreviationName}")
+                {
+                    argsParsingResult.IsSuccess = false;
+                    argsParsingResult.FlagOption = null;
+                    argsParsingResult.Error = new Error(ParsingErrorCode.UndefinedOption, flag);
+                    return argsParsingResult;
+                }
+                if (flag == $"--{FlagOption.FullName}" || flag == $"-{FlagOption.AbbreviationName}")
+                {
+                    argsParsingResult.IsSuccess = true;
+                    argsParsingResult.FlagOption = FlagOption;
+                }
             }
-            if (flags[0] == $"--{FullName}" || flags[0] == $"-{AbbreviationName}")
-            {
-                return new ArgsParsingResult(true, $"--{FullName}", $"-{AbbreviationName}");
-            }
-            throw new InvalidDataException($"can not parse flag {flags[0]}");
+
+            return argsParsingResult;
         }
     }
 }

@@ -1,27 +1,35 @@
-﻿using System.Collections.Generic;
-
-namespace Flag
+﻿namespace Flag
 {
     public class ArgsParsingResult
     {
-        readonly HashSet<string> flagValues = new HashSet<string>();
-        public ArgsParsingResult()
-        {
-        }
-
-        public ArgsParsingResult(bool isSuccess, string fullName, string abbreviationName)
-        {
-            IsSuccess = isSuccess;
-            flagValues.Add(fullName);
-            flagValues.Add(abbreviationName);
-        }
+        internal FlagOption FlagOption; // will be an array later
 
         public bool IsSuccess { get; set; }
 
         public bool GetFlagValue(string flag)
         {
-
-            return flagValues.Contains(flag);
+            if (FlagOption == null) return false;
+            return $"--{FlagOption.FullName}".Equals(flag) || $"-{FlagOption.AbbreviationName}".Equals(flag);
         }
+
+        public Error Error { get; set; }
+    }
+
+    public class Error
+    {
+        public Error(ParsingErrorCode parsingErrorCode, string trigger)
+        {
+            Code = parsingErrorCode;
+            Trigger = trigger;
+        }
+
+        public ParsingErrorCode Code { get; set; }
+        public string Trigger { get; set; }
+    }
+
+    public enum ParsingErrorCode
+    {
+        UndefinedOption,
+        InvalidOptionName
     }
 }

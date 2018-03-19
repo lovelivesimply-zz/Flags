@@ -18,6 +18,7 @@ namespace Flag.Test
 
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("--flag"));
+            Assert.Null(result.Error);
         }
 
         [Fact]
@@ -57,6 +58,7 @@ namespace Flag.Test
 
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("-f"));
+            Assert.Null(result.Error);
         }
 
         [Fact]
@@ -93,33 +95,54 @@ namespace Flag.Test
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("--flag"));
+            Assert.Null(result.Error);
 
             ArgsParsingResult result2 = parser.Parser(new[] { "--flag" });
             Assert.True(result2.IsSuccess);
             Assert.True(result2.GetFlagValue("-f"));
+            Assert.Null(result2.Error);
         }
 
         [Fact]
         public void should_throw_exception_when_add_flag_without_full_name_and_abbr_name()
         {
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption(null, null, "description"));
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption("", null, "description"));
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption(null, "", "description"));
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption("flag", "ff", "description"));
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption("-flag", "f", "description"));
+            Assert.Throws<ArgumentNullException>(() => new ArgsParserBuilder().AddFlagOption(null, null, "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("", null, "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption(null, "", "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("flag", "ff", "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("-flag", "f", "description"));
         }
 
         [Fact]
-        public void should_throw_exception_when_parse_parameters_is_empty_or_multiple()
+        public void should_return_false_and_get_error_code_when_parse_parameter_is_invalid()
         {
             var fullName = "flag";
             var abbrName = "f";
             var description = "the first flag";
 
             ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
+            ArgsParsingResult result = parser.Parser(new[] { "-f", "-flag" });
 
-            Assert.Throws<InvalidDataException>(() => parser.Parser(new string[] {}));
-            Assert.Throws<InvalidDataException>(() => parser.Parser(new[] { "-f", "-flag" }));
+            Assert.False(result.IsSuccess);
+            Assert.False(result.GetFlagValue("--flag"));
+            Assert.Equal(ParsingErrorCode.InvalidOptionName, result.Error.Code);
+            Assert.Equal("-flag", result.Error.Trigger);
+        }
+
+        [Fact]
+        public void should_return_false_and_get_unfined_error_code_when_parse_parameter_is_undefined()
+        {
+            var fullName = "flag";
+            var abbrName = "f";
+            var description = "the first flag";
+
+            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
+            ArgsParsingResult result = parser.Parser(new[] { "-f", "-v" });
+
+            Assert.False(result.IsSuccess);
+            Assert.False(result.GetFlagValue("--flag"));
+            Assert.Equal(ParsingErrorCode.UndefinedOption, result.Error.Code);
+            Assert.Equal("-v", result.Error.Trigger);
         }
 
         [Fact]
@@ -140,16 +163,5 @@ namespace Flag.Test
             Assert.False(result.GetFlagValue("-v"));
         }
 
-        [Fact]
-        public void should_throw_exception_and_get_message_when_the_parse_parameter_is_invalid()
-        {
-            var fullName = "flag";
-            var abbrName = "f";
-            var description = "the first flag";
-
-            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
-
-            Assert.Throws<InvalidDataException>(() => parser.Parser(new []{"-v"}));
-        }
     }
 }
