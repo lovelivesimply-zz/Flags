@@ -24,6 +24,14 @@ namespace Flag
                     argsParsingResult.Error = new Error(ParsingErrorCode.InvalidOptionName, flag);
                     return argsParsingResult;
                 }
+
+                if (flag != $"--{FlagOption.FullName}" && flag != $"-{FlagOption.AbbreviationName}")
+                {
+                    argsParsingResult.IsSuccess = false;
+                    argsParsingResult.FlagOption = null;
+                    argsParsingResult.Error = new Error(ParsingErrorCode.UndefinedOption, flag);
+                    return argsParsingResult;
+                }
                 if (flag == $"--{FlagOption.FullName}" || flag == $"-{FlagOption.AbbreviationName}")
                 {
                     argsParsingResult.IsSuccess = true;
