@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Xunit;
 
 namespace Flag.Test
@@ -80,7 +79,7 @@ namespace Flag.Test
         {
             var description = "the first flag";
 
-            Assert.Throws<InvalidDataException>(() => new ArgsParserBuilder().AddFlagOption(null, null, description).Build());
+            Assert.Throws<ArgumentNullException>(() => new ArgsParserBuilder().AddFlagOption(null, null, description).Build());
         }
 
         [Fact]
@@ -104,11 +103,20 @@ namespace Flag.Test
         }
 
         [Fact]
-        public void should_throw_exception_when_add_flag_without_full_name_and_abbr_name()
+        public void should_throw_exception_when_add_flag_with_empty_full_name_and_null_abbr_name()
         {
-            Assert.Throws<ArgumentNullException>(() => new ArgsParserBuilder().AddFlagOption(null, null, "description"));
             Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("", null, "description"));
+        }
+
+        [Fact]
+        public void should_throw_exception_when_add_flag_with_null_full_name_and_empty_abbr_name()
+        {
             Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption(null, "", "description"));
+        }
+
+        [Fact]
+        public void should_throw_exception_when_add_flag_with_invalid_full_name_or_abbr_name()
+        {
             Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("flag", "ff", "description"));
             Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("-flag", "f", "description"));
         }
