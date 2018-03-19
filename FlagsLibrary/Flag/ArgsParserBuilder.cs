@@ -5,16 +5,13 @@ namespace Flag
 {
     public class ArgsParserBuilder
     {
-        public ArgsParser parser = new ArgsParser();
+        private ArgsParser parser;
         string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
         string abbrNamePattern = @"^[a-zA-Z]$";
         public ArgsParserBuilder AddFlagOption(string fullName, string abbreviationName, string description)
         {
             ValidFlagName(fullName, abbreviationName);
-
-            parser.FullName = fullName;
-            parser.AbbreviationName = abbreviationName;
-            parser.Description = description;
+            parser = new ArgsParser(fullName, abbreviationName, description);
             return this;
         }
 
