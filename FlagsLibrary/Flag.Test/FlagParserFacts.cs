@@ -117,8 +117,13 @@ namespace Flag.Test
         [Fact]
         public void should_throw_exception_when_add_flag_with_invalid_full_name_or_abbr_name()
         {
-            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("flag", '3', "description"));
             Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("-flag", 'f', "description"));
+        }
+
+        [Fact]
+        public void should_throw_argument_exception_when_add_flag_with_abbreviation_name_is_not_letter()
+        {
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("flag", '3', "description"));
         }
 
         [Fact]
