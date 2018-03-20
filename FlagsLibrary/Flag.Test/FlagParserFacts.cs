@@ -24,7 +24,7 @@ namespace Flag.Test
         void should_success_and_get_flag_value_when_add_flag_with_description_is_null()
         {
             var fullName = "flag";
-            var abbreviation = "f";
+            var abbreviation = 'f';
             var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviation, null).Build();
 
             ArgsParsingResult result = parser.Parser(new[] {"--flag"});
@@ -35,7 +35,7 @@ namespace Flag.Test
         [Fact]
         public void should_parse_success_and_can_get_flag_value_when_flag_has_abbreviation_name()
         {
-            var abbrName = "f";
+            var abbrName = 'f';
             var description = "the first flag";
 
             ArgsParser parser = new ArgsParserBuilder().AddFlagOption(null, abbrName, description).Build();
@@ -48,7 +48,7 @@ namespace Flag.Test
         [Fact]
         void should_success_and_get_flag_value_when_add_flag_with_full_name_is_null()
         {
-            var abbreviation = "f";
+            var abbreviation = 'f';
             var description = "the first flag";
 
             var parser = new ArgsParserBuilder().AddFlagOption(null, abbreviation, description).Build();
@@ -64,7 +64,7 @@ namespace Flag.Test
         void should_success_and_get_flag_value_when_add_flag_with_legal_parameter()
         {
             var fullName = "flag";
-            var abbreviation = "f";
+            char? abbreviation = 'f';
             var description = "the first flag";
             var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviation, description).Build();
 
@@ -86,7 +86,7 @@ namespace Flag.Test
         public void should_parse_success_and_can_get_flag_value_when_flag_has_two_valid_names()
         {
             var fullName = "flag";
-            var abbrName = "f";
+            var abbrName = 'f';
             var description = "the first flag";
 
             ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
@@ -111,21 +111,21 @@ namespace Flag.Test
         [Fact]
         public void should_throw_exception_when_add_flag_with_null_full_name_and_empty_abbr_name()
         {
-            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption(null, "", "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption(null, default(char), "description"));
         }
 
         [Fact]
         public void should_throw_exception_when_add_flag_with_invalid_full_name_or_abbr_name()
         {
-            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("flag", "ff", "description"));
-            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("-flag", "f", "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("flag", '3', "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("-flag", 'f', "description"));
         }
 
         [Fact]
         public void should_return_false_and_get_error_code_when_parse_parameter_is_invalid()
         {
             var fullName = "flag";
-            var abbrName = "f";
+            var abbrName = 'f';
             var description = "the first flag";
 
             ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
@@ -141,7 +141,7 @@ namespace Flag.Test
         public void should_return_false_and_get_unfined_error_code_when_parse_parameter_is_undefined()
         {
             var fullName = "flag";
-            var abbrName = "f";
+            var abbrName = 'f';
             var description = "the first flag";
 
             ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
@@ -157,7 +157,7 @@ namespace Flag.Test
         public void should_return_false_when_get_flag_value_with_wrong_parameters()
         {
             var fullName = "flag";
-            var abbrName = "f";
+            var abbrName = 'f';
             var description = "the first flag";
 
             ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();

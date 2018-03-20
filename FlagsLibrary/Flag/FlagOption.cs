@@ -6,7 +6,7 @@ namespace Flag
         {
         }
 
-        public FlagOption(string fullName, string abbreviationName, string description)
+        public FlagOption(string fullName, char? abbreviationName, string description)
         {
             FullName = fullName;
             AbbreviationName = abbreviationName;
@@ -14,7 +14,7 @@ namespace Flag
         }
 
         public string FullName { get; set; }
-        public string AbbreviationName { get; set; }
+        public char? AbbreviationName { get; set; }
         private string Description { get; set; }
     }
 }

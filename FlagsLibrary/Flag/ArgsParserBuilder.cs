@@ -8,7 +8,7 @@ namespace Flag
         private readonly ArgsParser parser = new ArgsParser();
         string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
         string abbrNamePattern = @"^[a-zA-Z]$";
-        public ArgsParserBuilder AddFlagOption(string fullName, string abbreviationName, string description)
+        public ArgsParserBuilder AddFlagOption(string fullName, char? abbreviationName, string description)
         {
 
             ValidFlagName(fullName, abbreviationName);
@@ -16,7 +16,7 @@ namespace Flag
             return this;
         }
 
-        void ValidFlagName(string fullName, string abbreviationName)
+        void ValidFlagName(string fullName, char? abbreviationName)
         {
             if (fullName == null && abbreviationName == null)
             {
@@ -28,7 +28,7 @@ namespace Flag
                 throw new ArgumentException();
             }
 
-            if (abbreviationName != null && !new Regex(abbrNamePattern).IsMatch(abbreviationName))
+            if (abbreviationName != null && !Char.IsLetter((char) abbreviationName))
             {
                 throw new ArgumentException();
             }
