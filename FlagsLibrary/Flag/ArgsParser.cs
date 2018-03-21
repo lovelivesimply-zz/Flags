@@ -13,6 +13,7 @@ namespace Flag
         internal List<FlagOption> flagOptions = new List<FlagOption>();
         string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
         string abbrNamePattern = @"^[a-zA-Z]$";
+        bool isFlagNameValid;
 
         /// <summary>
         /// accept a to be parsed string array and return a parsing result
@@ -24,29 +25,21 @@ namespace Flag
         {
             var argsParsingResult = new ArgsParsingResult();
 
-            if (flags == null)
-            {
-                throw new ArgumentException();
-            }
+            ValidateParamete(flags);
 
             foreach (var flag in flags)
             {
-                if (flag == null)
-                {
-                   throw new ArgumentException();
-                }
-            }
+                isFlagNameValid = new Regex(fullNamePattern).IsMatch(flag.Substring(2)) && flag.IndexOf("--", StringComparison.Ordinal) == 0
+                                    ||new Regex(abbrNamePattern).IsMatch(flag.Substring(1)) && flag.IndexOf("-", StringComparison.Ordinal) == 0;
 
-            foreach (var flag in flags)
-            {
-                if (!((new Regex(fullNamePattern).IsMatch(flag.Substring(2)) && flag.IndexOf("--", StringComparison.Ordinal) == 0)
-                    || (new Regex(abbrNamePattern).IsMatch(flag.Substring(1)) && flag.IndexOf("-", StringComparison.Ordinal) == 0)))
+                if (!isFlagNameValid)
                 {
                     argsParsingResult.IsSuccess = false;
                     argsParsingResult.FlagOptions = null;
                     argsParsingResult.Error = new Error(ParsingErrorCode.FreeValueNotSupported, flag);
                     return argsParsingResult;
                 }
+
                 var flagOption = flagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag);
                 if (flagOption == null)
                 {
@@ -61,6 +54,22 @@ namespace Flag
             }
 
             return argsParsingResult;
+        }
+
+        static void ValidateParamete(string[] flags)
+        {
+            if (flags == null)
+            {
+                throw new ArgumentException();
+            }
+
+            foreach (var flag in flags)
+            {
+                if (flag == null)
+                {
+                    throw new ArgumentException();
+                }
+            }
         }
     }
 }
