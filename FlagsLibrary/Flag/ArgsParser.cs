@@ -24,6 +24,11 @@ namespace Flag
         {
             var argsParsingResult = new ArgsParsingResult();
 
+            if (flags == null)
+            {
+                throw new ArgumentException();
+            }
+
             foreach (var flag in flags)
             {
                 if (!((new Regex(fullNamePattern).IsMatch(flag.Substring(2)) && flag.IndexOf("--", StringComparison.Ordinal) == 0)

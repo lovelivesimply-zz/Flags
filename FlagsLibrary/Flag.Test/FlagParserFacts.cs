@@ -236,5 +236,15 @@ namespace Flag.Test
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
         }
+
+        [Fact]
+        void should_throw_ArgumentNullException_when_parse_with_parameter_is_null()
+        {
+            var fullName = "flag";
+            var abbreviation = 'f';
+
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviation, null).Build();
+            Assert.Throws<ArgumentException>(() => parser.Parser(null));
+        }
     }
 }
