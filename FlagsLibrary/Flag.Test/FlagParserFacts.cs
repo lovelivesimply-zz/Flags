@@ -305,7 +305,7 @@ namespace Flag.Test
 
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
-            Assert.Throws<ArgumentException>(() => result.GetFlagValue("f"));
+            Assert.Throws<ArgumentException>(() => result.GetFlagValue("ff"));
         }
     }
 }

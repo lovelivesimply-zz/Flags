@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Flag
 {
     public class ArgsParsingResult
     {
+        string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
+        string abbrNamePattern = @"^[a-zA-Z]$";
+
         internal List<FlagOption> FlagOptions = new List<FlagOption>();
         /// <summary>
         /// bool, respresent the flag parsing status
@@ -20,6 +24,12 @@ namespace Flag
         public bool GetFlagValue(string flag)
         {
             if (flag == null) throw new ArgumentException();
+
+            var isFlagNameValid = flag.IndexOf("--", StringComparison.Ordinal) == 0 && new Regex(fullNamePattern).IsMatch(flag.Substring(2)) 
+                              || flag.IndexOf("-", StringComparison.Ordinal) == 0 && new Regex(abbrNamePattern).IsMatch(flag.Substring(1));
+
+            if (!isFlagNameValid) throw new ArgumentException();
+
             if (!IsSuccess) throw new InvalidOperationException();
 
             var flagOption = FlagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag);
