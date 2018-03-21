@@ -19,15 +19,21 @@ namespace Flag
         /// <returns>return the builder itself, so that we can add more flag option</returns>
         public ArgsParserBuilder AddFlagOption(string fullName, char? abbreviationName, string description)
         {
-            if (abbreviationName!=null && parser.flagOptions.Find(f => f.AbbreviationName == abbreviationName) != null)
-            {
-                throw new ArgumentException();
-            }
+            ValidateDuplicateFlagName(fullName, abbreviationName);
             parser.flagOptions.Add(new FlagOption(fullName, abbreviationName, description));
             return this;
         }
 
-        
+        void ValidateDuplicateFlagName(string fullName, char? abbreviationName)
+        {
+            if (parser.flagOptions.Find(
+                    f => (abbreviationName != null && f.AbbreviationName == abbreviationName) ||
+                         (fullName != null && f.FullName == fullName)) != null)
+            {
+                throw new ArgumentException();
+            }
+        }
+
 
         /// <returns>return a parser</returns>
         public ArgsParser Build()
