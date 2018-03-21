@@ -249,6 +249,18 @@ namespace Flag.Test
         }
 
         [Fact]
+        void should_return_DuplicateFlagsInArgs_error_code_when_parse_with_duplicate_parameter()
+        {
+            var fullName = "flag";
+            var abbreviationName = 'f';
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-f","-f" });
+            Assert.False(result.IsSuccess);
+            Assert.Equal(ParsingErrorCode.DuplicateFlagsInArgs, result.Error.Code);
+        }
+
+        [Fact]
         void should_throw_ArgumentNullException_when_get_flag_value_with_parameter_is_null()
         {
             var fullName = "flag";

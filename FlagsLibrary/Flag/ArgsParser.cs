@@ -49,6 +49,12 @@ namespace Flag
                     return argsParsingResult;
                 }
 
+                if (argsParsingResult.FlagOptions.Contains(flagOption))
+                {
+                    argsParsingResult.IsSuccess = false;
+                    argsParsingResult.Error = new Error(ParsingErrorCode.DuplicateFlagsInArgs, flag);
+                    return argsParsingResult;
+                }
                 argsParsingResult.IsSuccess = true;
                 argsParsingResult.FlagOptions.Add(flagOption);
             }
@@ -56,7 +62,7 @@ namespace Flag
             return argsParsingResult;
         }
 
-        static void ValidateParamete(string[] flags)
+        void ValidateParamete(string[] flags)
         {
             if (flags == null)
             {
