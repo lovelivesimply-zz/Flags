@@ -176,5 +176,21 @@ namespace Flag.Test
             Assert.False(result.GetFlagValue("-v"));
         }
 
+        [Fact]
+        void should_success_add_multiple_flags()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+
+            var fullName2 = "flagSecond";
+            var abbreviation2 = 'S';
+
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName1, abbreviation1, null).AddFlagOption(fullName2, abbreviation2, null).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] {"--flag" });
+            Assert.True(result.IsSuccess);
+            Assert.True(result.GetFlagValue("-f"));
+        }
+
     }
 }

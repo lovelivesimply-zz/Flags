@@ -1,9 +1,10 @@
-﻿namespace Flag
+﻿using System.Collections.Generic;
+
+namespace Flag
 {
     public class ArgsParsingResult
     {
-        internal FlagOption FlagOption; // will be an array later
-
+        internal List<FlagOption> FlagOptions = new List<FlagOption>();
         /// <summary>
         /// bool, respresent the flag parsing status
         /// </summary>
@@ -17,8 +18,8 @@
         /// <returns>return false if can get the flag fullName or abbreviationName</returns>
         public bool GetFlagValue(string flag)
         {
-            if (FlagOption == null) return false;
-            return $"--{FlagOption.FullName}".Equals(flag) || $"-{FlagOption.AbbreviationName}".Equals(flag);
+            if (FlagOptions == null) return false;
+            return FlagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag) != null;
         }
 
         /// <summary>
@@ -27,7 +28,7 @@
         /// </summary>
         public Error Error { get; set; }
     }
-
+    
     public class Error
     {
         public Error(ParsingErrorCode parsingErrorCode, string trigger)

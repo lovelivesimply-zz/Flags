@@ -22,7 +22,7 @@ namespace Flag
         {
 
             ValidFlagName(fullName, abbreviationName);
-            parser.FlagOption = new FlagOption(fullName, abbreviationName, description);
+            parser.flagOptions.Add(new FlagOption(fullName, abbreviationName, description));
             return this;
         }
 

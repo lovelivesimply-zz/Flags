@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -9,7 +10,7 @@ namespace Flag
     /// </summary>
     public class ArgsParser
     {
-        internal FlagOption FlagOption = new FlagOption(); // currently is single, will be an array later.
+        internal List<FlagOption> flagOptions = new List<FlagOption>();
         string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
         string abbrNamePattern = @"^[a-zA-Z]$";
 
@@ -29,23 +30,21 @@ namespace Flag
                     || (new Regex(abbrNamePattern).IsMatch(flag.Substring(1)) && flag.IndexOf("-", StringComparison.Ordinal) == 0)))
                 {
                     argsParsingResult.IsSuccess = false;
-                    argsParsingResult.FlagOption = null;
+                    argsParsingResult.FlagOptions = null;
                     argsParsingResult.Error = new Error(ParsingErrorCode.InvalidOptionName, flag);
                     return argsParsingResult;
                 }
-
-                if (flag != $"--{FlagOption.FullName}" && flag != $"-{FlagOption.AbbreviationName}")
+                var flagOption = flagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag);
+                if (flagOption == null)
                 {
                     argsParsingResult.IsSuccess = false;
-                    argsParsingResult.FlagOption = null;
+                    argsParsingResult.FlagOptions = null;
                     argsParsingResult.Error = new Error(ParsingErrorCode.UndefinedOption, flag);
                     return argsParsingResult;
                 }
-                if (flag == $"--{FlagOption.FullName}" || flag == $"-{FlagOption.AbbreviationName}")
-                {
-                    argsParsingResult.IsSuccess = true;
-                    argsParsingResult.FlagOption = FlagOption;
-                }
+
+                argsParsingResult.IsSuccess = true;
+                argsParsingResult.FlagOptions.Add(flagOption);
             }
 
             return argsParsingResult;
