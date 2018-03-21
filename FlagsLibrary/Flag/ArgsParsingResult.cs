@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Flag
 {
@@ -18,7 +19,7 @@ namespace Flag
         /// <returns>return false if can get the flag fullName or abbreviationName</returns>
         public bool GetFlagValue(string flag)
         {
-            if (FlagOptions == null) return false;
+            if (flag == null) throw new ArgumentException();
             return FlagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag) != null;
         }
 
@@ -45,6 +46,7 @@ namespace Flag
     {
         UndefinedOption,
         InvalidOptionName,
-        FreeValueNotSupported
+        FreeValueNotSupported,
+        DuplicateFlagsInArgs
     }
 }

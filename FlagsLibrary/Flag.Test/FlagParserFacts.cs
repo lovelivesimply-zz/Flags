@@ -249,7 +249,18 @@ namespace Flag.Test
             ArgsParsingResult result = parser.Parser(new[] { "--second" });
             Assert.False(result.IsSuccess);
             Assert.Equal(ParsingErrorCode.FreeValueNotSupported, result.Error.Code);
+        }
 
+        [Fact]
+        void should_throw_ArgumentNullException_when_get_flag_value_with_parameter_is_null()
+        {
+            var fullName = "flag";
+            var abbreviationName = 'f';
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-f"});
+            Assert.True(result.IsSuccess);
+            Assert.Throws<ArgumentException>(() => result.GetFlagValue(null));
         }
     }
 }
