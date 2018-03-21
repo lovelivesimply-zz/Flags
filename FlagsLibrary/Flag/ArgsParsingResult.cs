@@ -14,6 +14,7 @@ namespace Flag
         /// bool, respresent the flag parsing status
         /// </summary>
         public bool IsSuccess { get; set; }
+        readonly ParameterValidator parameterValidator = new ParameterValidator();
 
         /// <summary>
         /// currently is bool, a result status to get flag fullName or abbreviationName
@@ -25,8 +26,7 @@ namespace Flag
         {
             if (flag == null) throw new ArgumentException();
 
-            var isFlagNameValid = flag.IndexOf("--", StringComparison.Ordinal) == 0 && new Regex(fullNamePattern).IsMatch(flag.Substring(2)) 
-                              || flag.IndexOf("-", StringComparison.Ordinal) == 0 && new Regex(abbrNamePattern).IsMatch(flag.Substring(1));
+            var isFlagNameValid = parameterValidator.ValidateFlagNameFormat(flag);
 
             if (!isFlagNameValid) throw new ArgumentException();
 

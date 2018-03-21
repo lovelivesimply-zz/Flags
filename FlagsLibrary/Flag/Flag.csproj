@@ -44,6 +44,7 @@
     <Compile Include="ArgsParserBuilder.cs" />
     <Compile Include="ArgsParsingResult.cs" />
     <Compile Include="FlagOption.cs" />
+    <Compile Include="ParameterValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

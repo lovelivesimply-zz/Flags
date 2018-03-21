@@ -11,9 +11,8 @@ namespace Flag
     public class ArgsParser
     {
         internal List<FlagOption> flagOptions = new List<FlagOption>();
-        string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
-        string abbrNamePattern = @"^[a-zA-Z]$";
         bool isFlagNameValid;
+        readonly ParameterValidator parameterValidator = new ParameterValidator();
 
         /// <summary>
         /// accept a to be parsed string array and return a parsing result
@@ -29,8 +28,7 @@ namespace Flag
 
             foreach (var flag in flags)
             {
-                isFlagNameValid = new Regex(fullNamePattern).IsMatch(flag.Substring(2)) && flag.IndexOf("--", StringComparison.Ordinal) == 0
-                                    ||new Regex(abbrNamePattern).IsMatch(flag.Substring(1)) && flag.IndexOf("-", StringComparison.Ordinal) == 0;
+                isFlagNameValid = parameterValidator.ValidateFlagNameFormat(flag);
 
                 if (!isFlagNameValid)
                 {
@@ -76,6 +74,11 @@ namespace Flag
                     throw new ArgumentException();
                 }
             }
+        }
+
+        void ValidateDuplicateFlagName(string[] flags)
+        {
+            
         }
     }
 }
