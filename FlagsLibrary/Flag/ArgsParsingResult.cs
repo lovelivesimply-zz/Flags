@@ -44,6 +44,7 @@ namespace Flag
     public enum ParsingErrorCode
     {
         UndefinedOption,
-        InvalidOptionName
+        InvalidOptionName,
+        FreeValueNotSupported
     }
 }

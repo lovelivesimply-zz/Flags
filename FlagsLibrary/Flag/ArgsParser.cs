@@ -52,7 +52,7 @@ namespace Flag
                 {
                     argsParsingResult.IsSuccess = false;
                     argsParsingResult.FlagOptions = null;
-                    argsParsingResult.Error = new Error(ParsingErrorCode.UndefinedOption, flag);
+                    argsParsingResult.Error = new Error(ParsingErrorCode.FreeValueNotSupported, flag);
                     return argsParsingResult;
                 }
 

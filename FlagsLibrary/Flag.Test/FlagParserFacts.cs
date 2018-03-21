@@ -143,22 +143,6 @@ namespace Flag.Test
         }
 
         [Fact]
-        public void should_return_false_and_get_unfined_error_code_when_parse_parameter_is_undefined()
-        {
-            var fullName = "flag";
-            var abbrName = 'f';
-            var description = "the first flag";
-
-            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
-            ArgsParsingResult result = parser.Parser(new[] { "-f", "-v" });
-
-            Assert.False(result.IsSuccess);
-            Assert.False(result.GetFlagValue("--flag"));
-            Assert.Equal(ParsingErrorCode.UndefinedOption, result.Error.Code);
-            Assert.Equal("-v", result.Error.Trigger);
-        }
-
-        [Fact]
         public void should_return_false_when_get_flag_value_with_wrong_parameters()
         {
             var fullName = "flag";
@@ -255,6 +239,19 @@ namespace Flag.Test
 
             var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviation, null).Build();
             Assert.Throws<ArgumentException>(() => parser.Parser(new[] {"-f", null}));
+        }
+
+        [Fact]
+        void should_return_FreeValueNotSupported_error_code_when_parse_with_undefined_flag()
+        {
+            var fullName = "flag";
+            var abbreviationName = 'f';
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "--second" });
+            Assert.False(result.IsSuccess);
+            Assert.Equal(ParsingErrorCode.FreeValueNotSupported, result.Error.Code);
+
         }
     }
 }
