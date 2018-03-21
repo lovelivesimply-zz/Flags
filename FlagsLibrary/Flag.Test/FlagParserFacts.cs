@@ -216,5 +216,25 @@ namespace Flag.Test
             Assert.Throws<ArgumentException>(() => builder.AddFlagOption(fullName1, abbreviation2, null));
         }
 
+        [Fact] void should_success_when_add_mutiple_flags_with_abbreviation_names_are_all_null()
+        {
+            var fullName1 = "flag";
+            var fullName2 = "flagSecond";
+
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName1, null, null).AddFlagOption(fullName2,null,null).Build();
+            ArgsParsingResult result = parser.Parser(new[] { "--flag" });
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        void should_success_when_add_mutiple_flags_with_full_names_are_all_null()
+        {
+            var abbreviation1 = 'f';
+            var abbreviation2 = 'S';
+
+            var parser = new ArgsParserBuilder().AddFlagOption(null, abbreviation1, null).AddFlagOption(null, abbreviation2, null).Build();
+            ArgsParsingResult result = parser.Parser(new[] { "-f" });
+            Assert.True(result.IsSuccess);
+        }
     }
 }
