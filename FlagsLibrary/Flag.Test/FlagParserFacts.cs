@@ -137,9 +137,7 @@ namespace Flag.Test
             ArgsParsingResult result = parser.Parser(new[] { "-f", "-flag" });
 
             Assert.False(result.IsSuccess);
-            Assert.False(result.GetFlagValue("--flag"));
-            Assert.Equal(ParsingErrorCode.InvalidOptionName, result.Error.Code);
-            Assert.Equal("-flag", result.Error.Trigger);
+            Assert.Equal(ParsingErrorCode.FreeValueNotSupported, result.Error.Code);
         }
 
         [Fact]

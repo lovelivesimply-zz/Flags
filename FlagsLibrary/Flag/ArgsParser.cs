@@ -44,7 +44,7 @@ namespace Flag
                 {
                     argsParsingResult.IsSuccess = false;
                     argsParsingResult.FlagOptions = null;
-                    argsParsingResult.Error = new Error(ParsingErrorCode.InvalidOptionName, flag);
+                    argsParsingResult.Error = new Error(ParsingErrorCode.FreeValueNotSupported, flag);
                     return argsParsingResult;
                 }
                 var flagOption = flagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag);
