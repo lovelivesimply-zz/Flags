@@ -153,9 +153,6 @@ namespace Flag.Test
 
             Assert.True(result.IsSuccess);
             Assert.True(result.GetFlagValue("--flag"));
-            Assert.False(result.GetFlagValue("--f"));
-            Assert.False(result.GetFlagValue("-flag"));
-            Assert.False(result.GetFlagValue("-v"));
         }
 
         [Fact]
@@ -273,6 +270,30 @@ namespace Flag.Test
             ArgsParsingResult result = parser.Parser(new[] { "-S" });
             Assert.False(result.IsSuccess);
             Assert.Throws<InvalidOperationException>(() => result.GetFlagValue("-f"));
+        }
+
+        [Fact]
+        void should_throw_ArgumentException_when_get_flag_value_with_undefined_flag_name()
+        {
+            var fullName = "flag";
+            var abbreviationName = 'f';
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-f" });
+            Assert.True(result.IsSuccess);
+            Assert.Throws<ArgumentException>(() => result.GetFlagValue("-S"));
+        }
+
+        [Fact]
+        void should_throw_ArgumentException_when_get_flag_value_with_invalid_parameter()
+        {
+            var fullName = "flag";
+            var abbreviationName = 'f';
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-f" });
+            Assert.True(result.IsSuccess);
+            Assert.Throws<ArgumentException>(() => result.GetFlagValue("f"));
         }
     }
 }

@@ -21,7 +21,10 @@ namespace Flag
         {
             if (flag == null) throw new ArgumentException();
             if (!IsSuccess) throw new InvalidOperationException();
-            return FlagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag) != null;
+
+            var flagOption = FlagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag);
+            if (flagOption == null) throw new ArgumentException();
+            return true;
         }
 
         /// <summary>
