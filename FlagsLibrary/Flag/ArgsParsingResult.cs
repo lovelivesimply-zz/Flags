@@ -20,6 +20,7 @@ namespace Flag
         public bool GetFlagValue(string flag)
         {
             if (flag == null) throw new ArgumentException();
+            if (!IsSuccess) throw new InvalidOperationException();
             return FlagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag) != null;
         }
 

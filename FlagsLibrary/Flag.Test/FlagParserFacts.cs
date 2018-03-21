@@ -262,5 +262,17 @@ namespace Flag.Test
             Assert.True(result.IsSuccess);
             Assert.Throws<ArgumentException>(() => result.GetFlagValue(null));
         }
+
+        [Fact]
+        void should_throw_InvalidOperationException_when_get_flag_value_if_IsSucess_is_false()
+        {
+            var fullName = "flag";
+            var abbreviationName = 'f';
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-S" });
+            Assert.False(result.IsSuccess);
+            Assert.Throws<InvalidOperationException>(() => result.GetFlagValue("-f"));
+        }
     }
 }
