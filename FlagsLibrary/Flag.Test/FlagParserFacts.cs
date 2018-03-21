@@ -192,5 +192,17 @@ namespace Flag.Test
             Assert.True(result.GetFlagValue("-f"));
         }
 
+        [Fact]
+        void should_throw_ArgumentException_when_add_with_duplicate_abbreviation_name()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+
+            var fullName2 = "flagSecond";
+
+            var builder = new ArgsParserBuilder().AddFlagOption(fullName1, abbreviation1, null);
+            Assert.Throws<ArgumentException>(() => builder.AddFlagOption(fullName2, abbreviation1, null));
+        }
+
     }
 }
