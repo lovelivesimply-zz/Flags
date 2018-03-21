@@ -19,6 +19,7 @@ namespace Flag
                    flag.IndexOf("--", StringComparison.Ordinal) == 0
                    || new Regex(abbrNamePattern).IsMatch(flag.Substring(1)) &&
                    flag.IndexOf("-", StringComparison.Ordinal) == 0;
-        
+
+        }
     }
 }

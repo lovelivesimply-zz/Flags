@@ -26,6 +26,14 @@ namespace Flag
 
             ValidateParamete(flags);
 
+            if (!ValidateDuplicateFlagName(flags))
+            {
+                argsParsingResult.IsSuccess = false;
+                argsParsingResult.FlagOptions = null;
+                argsParsingResult.Error = new Error(ParsingErrorCode.DuplicateFlagsInArgs, flags[0]);
+                return argsParsingResult;
+            }
+
             foreach (var flag in flags)
             {
                 isFlagNameValid = parameterValidator.ValidateFlagNameFormat(flag);
@@ -76,9 +84,17 @@ namespace Flag
             }
         }
 
-        void ValidateDuplicateFlagName(string[] flags)
+        bool ValidateDuplicateFlagName(string[] flags)
         {
-            
+            List<string> list = new List<string>();
+            foreach (var flag in flags)
+            {
+                if (!list.Contains(flag))
+                {
+                    list.Add(flag);
+                }
+            }
+            return list.Count == flags.Length;
         }
     }
 }

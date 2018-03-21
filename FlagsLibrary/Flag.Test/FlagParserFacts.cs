@@ -307,5 +307,16 @@ namespace Flag.Test
             Assert.True(result.IsSuccess);
             Assert.Throws<ArgumentException>(() => result.GetFlagValue("ff"));
         }
+
+        [Fact]
+        void should_throw_ArgumentException_when_parse_with_deuplicate_parameter()
+        {
+            var fullName = "flag";
+            var abbreviationName = 'f';
+            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+
+            var result = parser.Parser(new[] {"-f", "-f"});
+            Assert.Equal(ParsingErrorCode.DuplicateFlagsInArgs, result.Error.Code);
+        }
     }
 }
