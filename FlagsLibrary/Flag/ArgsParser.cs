@@ -4,12 +4,21 @@ using System.Text.RegularExpressions;
 
 namespace Flag
 {
+    /// <summary>
+    /// provide parse function and build from ArgsParserBuilder
+    /// </summary>
     public class ArgsParser
     {
         internal FlagOption FlagOption = new FlagOption(); // currently is single, will be an array later.
         string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
         string abbrNamePattern = @"^[a-zA-Z]$";
 
+        /// <summary>
+        /// accept a to be parsed string array and return a parsing result
+        /// </summary>
+        /// <param name="flags"> string array to be parsed</param>
+        /// <returns>return a parsing result with IsSucccess is true when parsing successfully</returns>
+        /// <returns>return a parsing result with IsSucccess is false and error code and trigger when parsing failed</returns>
         public ArgsParsingResult Parser(string[] flags)
         {
             var argsParsingResult = new ArgsParsingResult();
