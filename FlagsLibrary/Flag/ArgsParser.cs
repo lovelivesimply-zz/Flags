@@ -86,15 +86,16 @@ namespace Flag
 
         bool ValidateDuplicateFlagName(string[] flags)
         {
-            List<string> list = new List<string>();
+            HashSet<string> temp = new HashSet<string>();
             foreach (var flag in flags)
             {
-                if (!list.Contains(flag))
+                if (temp.Contains(flag))
                 {
-                    list.Add(flag);
+                    return false;
                 }
+                temp.Add(flag);
             }
-            return list.Count == flags.Length;
+            return true;
         }
     }
 }
