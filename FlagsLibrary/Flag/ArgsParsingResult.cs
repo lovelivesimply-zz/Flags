@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace Flag
 {
     public class ArgsParsingResult
     {
-        string fullNamePattern = @"^[a-zA-Z0-9_][a-zA-Z0-9_-]*$";
-        string abbrNamePattern = @"^[a-zA-Z]$";
-
         internal List<FlagOption> FlagOptions = new List<FlagOption>();
+
+        public ArgsParsingResult(bool isSuccess, List<FlagOption> flagOptions, Error error)
+        {
+            IsSuccess = isSuccess;
+            FlagOptions = flagOptions;
+            Error = error;
+        }
+
         /// <summary>
         /// bool, respresent the flag parsing status
         /// </summary>
         public bool IsSuccess { get; set; }
-        readonly ParameterValidator parameterValidator = new ParameterValidator();
 
         /// <summary>
         /// currently is bool, a result status to get flag fullName or abbreviationName
@@ -24,16 +27,10 @@ namespace Flag
         /// <returns>return false if can get the flag fullName or abbreviationName</returns>
         public bool GetFlagValue(string flag)
         {
-            if (flag == null) throw new ArgumentException();
-
-            var isFlagNameValid = parameterValidator.ValidateFlagNameFormat(flag);
-
-            if (!isFlagNameValid) throw new ArgumentException();
-
+            if (flag == null || !ParameterValidator.ValidateFlagNameFormat(flag)) throw new ArgumentException();
             if (!IsSuccess) throw new InvalidOperationException();
-
-            var flagOption = FlagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag);
-            if (flagOption == null) throw new ArgumentException();
+            if (FlagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag) == null)
+                throw new ArgumentException();
             return true;
         }
 
@@ -43,7 +40,7 @@ namespace Flag
         /// </summary>
         public Error Error { get; set; }
     }
-    
+
     public class Error
     {
         public Error(ParsingErrorCode parsingErrorCode, string trigger)
@@ -58,8 +55,6 @@ namespace Flag
 
     public enum ParsingErrorCode
     {
-        UndefinedOption,
-        InvalidOptionName,
         FreeValueNotSupported,
         DuplicateFlagsInArgs
     }

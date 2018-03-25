@@ -242,9 +242,10 @@ namespace Flag.Test
             var abbreviationName = 'f';
             var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
 
-            ArgsParsingResult result = parser.Parser(new[] { "-f","-f" });
+            ArgsParsingResult result = parser.Parser(new[] { "-f", "-f" });
             Assert.False(result.IsSuccess);
             Assert.Equal(ParsingErrorCode.DuplicateFlagsInArgs, result.Error.Code);
+            Assert.Equal("-f", result.Error.Trigger);
         }
 
         [Fact]
@@ -257,6 +258,7 @@ namespace Flag.Test
             ArgsParsingResult result = parser.Parser(new[] { "-f", "--flag" });
             Assert.False(result.IsSuccess);
             Assert.Equal(ParsingErrorCode.DuplicateFlagsInArgs, result.Error.Code);
+            Assert.Equal("--flag", result.Error.Trigger);
         }
 
         [Fact]

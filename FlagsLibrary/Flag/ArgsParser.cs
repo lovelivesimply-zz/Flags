@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Flag
 {
@@ -11,8 +10,6 @@ namespace Flag
     public class ArgsParser
     {
         internal List<FlagOption> flagOptions = new List<FlagOption>();
-        bool isFlagNameValid;
-        readonly ParameterValidator parameterValidator = new ParameterValidator();
 
         /// <summary>
         /// accept a to be parsed string array and return a parsing result
@@ -22,79 +19,56 @@ namespace Flag
         /// <returns>return a parsing result with IsSucccess is false and error code and trigger when parsing failed</returns>
         public ArgsParsingResult Parser(string[] flags)
         {
-            var argsParsingResult = new ArgsParsingResult();
-
+            var parsingResultOptions = new List<FlagOption>();
             ValidateParamete(flags);
-
-            if (!ValidateDuplicateFlagName(flags))
+            string duplicatedFlag;
+            if (!ValidateDuplicateFlagName(flags, out duplicatedFlag))
             {
-                argsParsingResult.IsSuccess = false;
-                argsParsingResult.FlagOptions = null;
-                argsParsingResult.Error = new Error(ParsingErrorCode.DuplicateFlagsInArgs, flags[0]);
-                return argsParsingResult;
+                return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.DuplicateFlagsInArgs, duplicatedFlag));
             }
-
             foreach (var flag in flags)
             {
-                isFlagNameValid = parameterValidator.ValidateFlagNameFormat(flag);
-
-                if (!isFlagNameValid)
+                if (!ParameterValidator.ValidateFlagNameFormat(flag))
                 {
-                    argsParsingResult.IsSuccess = false;
-                    argsParsingResult.FlagOptions = null;
-                    argsParsingResult.Error = new Error(ParsingErrorCode.FreeValueNotSupported, flag);
-                    return argsParsingResult;
+                    return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
                 }
-
                 var flagOption = flagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag);
                 if (flagOption == null)
                 {
-                    argsParsingResult.IsSuccess = false;
-                    argsParsingResult.FlagOptions = null;
-                    argsParsingResult.Error = new Error(ParsingErrorCode.FreeValueNotSupported, flag);
-                    return argsParsingResult;
+                    return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
                 }
 
-                if (argsParsingResult.FlagOptions.Contains(flagOption))
+                if (parsingResultOptions.Contains(flagOption))
                 {
-                    argsParsingResult.IsSuccess = false;
-                    argsParsingResult.Error = new Error(ParsingErrorCode.DuplicateFlagsInArgs, flag);
-                    return argsParsingResult;
+                    return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.DuplicateFlagsInArgs, flag));
                 }
-                argsParsingResult.IsSuccess = true;
-                argsParsingResult.FlagOptions.Add(flagOption);
+                parsingResultOptions.Add(flagOption);
             }
 
-            return argsParsingResult;
+            return new ArgsParsingResult(true, parsingResultOptions, null);
         }
 
         void ValidateParamete(string[] flags)
         {
-            if (flags == null)
+            if (flags == null || flags.Any(f => f == null))
             {
                 throw new ArgumentException();
             }
-
-            foreach (var flag in flags)
-            {
-                if (flag == null)
-                {
-                    throw new ArgumentException();
-                }
-            }
         }
 
-        bool ValidateDuplicateFlagName(string[] flags)
+        bool ValidateDuplicateFlagName(string[] flags, out string duplicatedFlag)
         {
-            HashSet<string> temp = new HashSet<string>();
+            HashSet<string> toBeParsed = new HashSet<string>();
             foreach (var flag in flags)
             {
-                if (temp.Contains(flag))
+                if (toBeParsed.Contains(flag))
                 {
+                    duplicatedFlag = flag;
                     return false;
                 }
-                temp.Add(flag);
+                toBeParsed.Add(flag);
             }
+            duplicatedFlag = null;
             return true;
         }
     }
