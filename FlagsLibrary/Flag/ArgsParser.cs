@@ -19,13 +19,13 @@ namespace Flag
         /// <returns>return a parsing result with IsSucccess is false and error code and trigger when parsing failed</returns>
         public ArgsParsingResult Parser(string[] flags)
         {
-            var parsingResultOptions = new List<FlagOption>();
             ValidateParamete(flags);
             string duplicatedFlag;
             if (!ValidateDuplicateFlagName(flags, out duplicatedFlag))
             {
                 return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.DuplicateFlagsInArgs, duplicatedFlag));
             }
+            var parsingResultOptions = new List<FlagOption>();
             foreach (var flag in flags)
             {
                 if (!ParameterValidator.ValidateFlagNameFormat(flag))
