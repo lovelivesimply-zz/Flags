@@ -52,8 +52,8 @@ namespace Flag
             Trigger = trigger;
         }
 
-        public ParsingErrorCode Code { get; set; }
-        public string Trigger { get; set; }
+        public ParsingErrorCode Code { get; }
+        public string Trigger { get; }
     }
 
     public enum ParsingErrorCode
