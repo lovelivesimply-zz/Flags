@@ -17,7 +17,7 @@ namespace Flag
         /// <summary>
         /// bool, respresent the flag parsing status
         /// </summary>
-        public bool IsSuccess { get; set; }
+        public bool IsSuccess { get; }
 
         /// <summary>
         /// currently is bool, a result status to get flag fullName or abbreviationName
@@ -38,7 +38,7 @@ namespace Flag
         /// parsing result error, contains an error code and triggered value
         /// if parsing successfully, error is null
         /// </summary>
-        public Error Error { get; set; }
+        public Error Error { get; }
     }
 
     public class Error
