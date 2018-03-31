@@ -367,5 +367,24 @@ namespace Flag.Test
             Assert.Equal(ParsingErrorCode.FreeValueNotSupported, argsParsingResult.Error.Code);
             Assert.Equal("-fa", argsParsingResult.Error.Trigger);
         }
+
+         [Fact]
+        void should_return_DuplicateFlagsInArgs_error_code_when_combined_flags_contain_duplicate_flags_abbreviation()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+            var fullName2 = "flagSecond";
+            var abbreviation2 = 's';
+            var parser = new ArgsParserBuilder()
+                .AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .Build();
+
+            var argsParsingResult = parser.Parser(new[] {"-ff"});
+
+            Assert.False(argsParsingResult.IsSuccess);
+            Assert.Equal(ParsingErrorCode.DuplicateFlagsInArgs, argsParsingResult.Error.Code);
+            Assert.Equal("-ff", argsParsingResult.Error.Trigger);
+        }
     }
 }
