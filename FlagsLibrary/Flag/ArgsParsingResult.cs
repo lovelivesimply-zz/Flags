@@ -27,7 +27,7 @@ namespace Flag
         /// <returns>return false if can get the flag fullName or abbreviationName</returns>
         public bool GetFlagValue(string flag)
         {
-            if (flag == null || !ParameterValidator.ValidateFlagNameFormat(flag)) throw new ArgumentException();
+            if (flag == null || !ParameterValidator.ValidateFlagNameWhenGetValue(flag)) throw new ArgumentException();
             if (!IsSuccess) throw new InvalidOperationException();
             if (FlagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag) == null)
                 throw new ArgumentException();

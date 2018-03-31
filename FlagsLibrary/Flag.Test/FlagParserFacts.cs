@@ -134,11 +134,11 @@ namespace Flag.Test
             var description = "the first flag";
 
             ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
-            ArgsParsingResult result = parser.Parser(new[] { "-f", "-flag" });
+            ArgsParsingResult result = parser.Parser(new[] { "-f", "freeValueFlag" });
 
             Assert.False(result.IsSuccess);
             Assert.Equal(ParsingErrorCode.FreeValueNotSupported, result.Error.Code);
-            Assert.Equal("-flag", result.Error.Trigger);
+            Assert.Equal("freeValueFlag", result.Error.Trigger);
         }
 
         [Fact]
@@ -181,7 +181,8 @@ namespace Flag.Test
             Assert.Throws<ArgumentException>(() => builder.AddFlagOption(fullName1, abbreviation2, null));
         }
 
-        [Fact] void should_success_when_add_mutiple_flags_with_abbreviation_names_are_all_null()
+        [Fact]
+        void should_success_when_add_mutiple_flags_with_abbreviation_names_are_all_null()
         {
             var fullName1 = "flag";
             var fullName2 = "flagSecond";
@@ -307,6 +308,24 @@ namespace Flag.Test
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
             Assert.Throws<ArgumentException>(() => result.GetFlagValue("ff"));
+        }
+
+        [Fact]
+        void should_parse_valid_combined_flags_successfully()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+            var fullName2 = "flagSecond";
+            var abbreviation2 = 's';
+            var parser = new ArgsParserBuilder()
+                .AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .Build();
+
+            var argsParsingResult = parser.Parser(new[] {"-fs"});
+
+            Assert.True(argsParsingResult.IsSuccess);
+            Assert.Null(argsParsingResult.Error);
         }
     }
 }

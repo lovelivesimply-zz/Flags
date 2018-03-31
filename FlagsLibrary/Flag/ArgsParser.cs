@@ -28,21 +28,42 @@ namespace Flag
             var parsingResultOptions = new List<FlagOption>();
             foreach (var flag in flags)
             {
-                if (!ParameterValidator.ValidateFlagNameFormat(flag))
+                if (!ParameterValidator.ValidateFlagNameWhenParse(flag))
                 {
                     return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
                 }
-                var flagOption = flagOptions.Find(f => $"-{f.AbbreviationName}" == flag || $"--{f.FullName}" == flag);
-                if (flagOption == null)
+                if (flag.StartsWith("--"))
                 {
-                    return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
-                }
+                    var flagOption = flagOptions.Find(f => $"--{f.FullName}" == flag);
+                    if (flagOption == null)
+                    {
+                        return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
+                    }
 
-                if (parsingResultOptions.Contains(flagOption))
-                {
-                    return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.DuplicateFlagsInArgs, flag));
+                    if (parsingResultOptions.Contains(flagOption))
+                    {
+                        return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.DuplicateFlagsInArgs, flag));
+                    }
+                    parsingResultOptions.Add(flagOption);
                 }
-                parsingResultOptions.Add(flagOption);
+                else if (flag.StartsWith("-"))
+                {
+                    var flagAbberviations = flag.Substring(1);
+                    foreach (char flagAbberviation in flagAbberviations)
+                    {
+                        var flagOption = flagOptions.Find(f => f.AbbreviationName.HasValue && char.ToLower(f.AbbreviationName.Value) == char.ToLower(flagAbberviation));
+                        if (flagOption == null)
+                        {
+                            return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
+                        }
+
+                        if (parsingResultOptions.Contains(flagOption))
+                        {
+                            return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.DuplicateFlagsInArgs, flag));
+                        }
+                        parsingResultOptions.Add(flagOption);
+                    }
+                }
             }
 
             return new ArgsParsingResult(true, parsingResultOptions, null);
