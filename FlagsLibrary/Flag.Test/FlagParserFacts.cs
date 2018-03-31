@@ -327,5 +327,45 @@ namespace Flag.Test
             Assert.True(argsParsingResult.IsSuccess);
             Assert.Null(argsParsingResult.Error);
         }
+
+        [Fact]
+        void should_parse_successfully_when_parsing_args_contain_valid_combined_flags_and_valid_single_flag()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+            var fullName2 = "flagSecond";
+            var abbreviation2 = 's';
+            var fullName3 = "flagThird";
+            var abbreviation3 = 't';
+            var parser = new ArgsParserBuilder()
+                .AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .AddFlagOption(fullName3, abbreviation3, String.Empty)
+                .Build();
+
+            var argsParsingResult = parser.Parser(new[] {"-fs", "-t"});
+
+            Assert.True(argsParsingResult.IsSuccess);
+            Assert.Null(argsParsingResult.Error);
+        }
+
+        [Fact]
+        void should_return_FreeValueNotSupported_error_code_when_combined_flags_contain_undefined_flag_abbreviation()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+            var fullName2 = "flagSecond";
+            var abbreviation2 = 's';
+            var parser = new ArgsParserBuilder()
+                .AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .Build();
+
+            var argsParsingResult = parser.Parser(new[] {"-fa"});
+
+            Assert.False(argsParsingResult.IsSuccess);
+            Assert.Equal(ParsingErrorCode.FreeValueNotSupported, argsParsingResult.Error.Code);
+            Assert.Equal("-fa", argsParsingResult.Error.Trigger);
+        }
     }
 }
