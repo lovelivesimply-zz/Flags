@@ -32,19 +32,12 @@ namespace Flag
                 {
                     return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
                 }
+                ArgsParsingResult invalidParserResult;
                 if (flag.StartsWith("--"))
                 {
                     var flagOption = flagOptions.Find(f => $"--{f.FullName}" == flag);
-                    if (flagOption == null)
-                    {
-                        return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
-                    }
-
-                    if (parsingResultOptions.Contains(flagOption))
-                    {
-                        return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.DuplicateFlagsInArgs, flag));
-                    }
-                    parsingResultOptions.Add(flagOption);
+                    if (CheckAndSaveParseFlag(flagOption, flag, parsingResultOptions, out invalidParserResult))
+                        return invalidParserResult;
                 }
                 else if (flag.StartsWith("-"))
                 {
@@ -52,21 +45,31 @@ namespace Flag
                     foreach (char flagAbberviation in flagAbberviations)
                     {
                         var flagOption = flagOptions.Find(f => f.AbbreviationName.HasValue && char.ToLower(f.AbbreviationName.Value) == char.ToLower(flagAbberviation));
-                        if (flagOption == null)
-                        {
-                            return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
-                        }
-
-                        if (parsingResultOptions.Contains(flagOption))
-                        {
-                            return new ArgsParsingResult(false, null, new Error(ParsingErrorCode.DuplicateFlagsInArgs, flag));
-                        }
-                        parsingResultOptions.Add(flagOption);
+                        if (CheckAndSaveParseFlag(flagOption, flag, parsingResultOptions, out invalidParserResult))
+                            return invalidParserResult;
                     }
                 }
             }
 
             return new ArgsParsingResult(true, parsingResultOptions, null);
+        }
+
+        private bool CheckAndSaveParseFlag(FlagOption flagOption, string flag, List<FlagOption> parsingResultOptions, out ArgsParsingResult parser)
+        {
+            if (flagOption == null)
+            {
+                parser = new ArgsParsingResult(false, null, new Error(ParsingErrorCode.FreeValueNotSupported, flag));
+                return true;
+            }
+
+            if (parsingResultOptions.Contains(flagOption))
+            {
+                 parser = new ArgsParsingResult(false, null, new Error(ParsingErrorCode.DuplicateFlagsInArgs, flag));
+                 return true;
+            }
+            parser = new ArgsParsingResult();
+            parsingResultOptions.Add(flagOption);
+            return false;
         }
 
         void ValidateParamete(string[] flags)

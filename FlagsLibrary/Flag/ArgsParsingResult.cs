@@ -14,6 +14,10 @@ namespace Flag
             Error = error;
         }
 
+        public ArgsParsingResult()
+        {
+        }
+
         /// <summary>
         /// bool, respresent the flag parsing status
         /// </summary>
