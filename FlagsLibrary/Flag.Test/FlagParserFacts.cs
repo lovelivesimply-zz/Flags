@@ -405,5 +405,22 @@ namespace Flag.Test
             Assert.Equal(ParsingErrorCode.DuplicateFlagsInArgs, argsParsingResult.Error.Code);
             Assert.Equal("--flag", argsParsingResult.Error.Trigger);
         }
+
+        [Fact]
+        void should_throw_ArgumentException_when_get_flag_value_with_combined_flag()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+            var fullName2 = "flagSecond";
+            var abbreviation2 = 's';
+            var parser = new ArgsParserBuilder()
+                .AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-fs" });
+            Assert.True(result.IsSuccess);
+            Assert.Throws<ArgumentException>(() => result.GetFlagValue("fs"));
+        }
     }
 }
