@@ -7,7 +7,8 @@ namespace Flag
     /// </summary>
     public class ArgsParserBuilder
     {
-        private readonly ArgsParser parser = new ArgsParser();
+
+        internal readonly ArgsParser parser = new ArgsParser();
 
         /// <summary>
         /// used to add flag option
@@ -16,28 +17,16 @@ namespace Flag
         /// <param name="abbreviationName"></param>
         /// <param name="description"></param>
         /// <returns>return the builder itself, so that we can add more flag option</returns>
-        public ArgsParserBuilder AddFlagOption(string fullName, char? abbreviationName, string description)
-        {
-            ValidateDuplicateFlagName(fullName, abbreviationName);
-            parser.flagOptions.Add(new FlagOption(fullName, abbreviationName, description));
-            return this;
-        }
-
-        void ValidateDuplicateFlagName(string fullName, char? abbreviationName)
-        {
-            if (parser.flagOptions.Find(
-                    f => (abbreviationName != null && f.AbbreviationName == abbreviationName) ||
-                         (fullName != null && f.FullName == fullName)) != null)
-            {
-                throw new ArgumentException();
-            }
-        }
-
 
         /// <returns>return a parser</returns>
         public ArgsParser Build()
         {
             return parser;
+        }
+
+        public CommandBuilder BeginDefaultCommand()
+        {
+            return new CommandBuilder(this);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Flag
     /// </summary>
     public class ArgsParser
     {
-        internal List<FlagOption> flagOptions = new List<FlagOption>();
+        internal CommandBuilder defaultCommandBuilder;  // save all defined commands and will be a list later
 
         /// <summary>
         /// accept a to be parsed string array and return a parsing result
@@ -35,7 +35,7 @@ namespace Flag
                 ArgsParsingResult invalidParserResult;
                 if (flag.StartsWith("--"))
                 {
-                    var flagOption = flagOptions.Find(f => $"--{f.FullName}" == flag);
+                    var flagOption = defaultCommandBuilder.CommandFlagOptions.Find(f => $"--{f.FullName}" == flag);
                     if (CheckAndSaveParseFlag(flagOption, flag, parsingResultOptions, out invalidParserResult))
                         return invalidParserResult;
                 }
@@ -44,7 +44,7 @@ namespace Flag
                     var flagAbberviations = flag.Substring(1);
                     foreach (char flagAbberviation in flagAbberviations)
                     {
-                        var flagOption = flagOptions.Find(f => f.AbbreviationName.HasValue && char.ToLower(f.AbbreviationName.Value) == char.ToLower(flagAbberviation));
+                        var flagOption = defaultCommandBuilder.CommandFlagOptions.Find(f => f.AbbreviationName.HasValue && char.ToLower(f.AbbreviationName.Value) == char.ToLower(flagAbberviation));
                         if (CheckAndSaveParseFlag(flagOption, flag, parsingResultOptions, out invalidParserResult))
                             return invalidParserResult;
                     }
