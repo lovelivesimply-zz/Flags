@@ -311,7 +311,7 @@ namespace Flag.Test
         }
 
         [Fact]
-        void should_parse_valid_combined_flags_successfully()
+        void should_parse_valid_combined_flags_successfully_no_matter_the_order()
         {
             var fullName1 = "flag";
             var abbreviation1 = 'f';
@@ -326,6 +326,10 @@ namespace Flag.Test
 
             Assert.True(argsParsingResult.IsSuccess);
             Assert.Null(argsParsingResult.Error);
+
+            var anotherOrderArgsParsingResult = parser.Parser(new[] { "-sf" });
+            Assert.True(anotherOrderArgsParsingResult.IsSuccess);
+            Assert.Null(anotherOrderArgsParsingResult.Error);
         }
 
         [Fact]
@@ -421,6 +425,28 @@ namespace Flag.Test
             ArgsParsingResult result = parser.Parser(new[] { "-fs" });
             Assert.True(result.IsSuccess);
             Assert.Throws<ArgumentException>(() => result.GetFlagValue("fs"));
+        }
+
+        [Fact]
+        public void should_throw_ArgumentException_when_get_the_third_flag_value_without_parse_the_third_flag()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+            var fullName2 = "flagSecond";
+            var abbreviation2 = 's';
+            var fullName3 = "flagThird";
+            var abbreviation3 = 't';
+            var parser = new ArgsParserBuilder()
+                .AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .AddFlagOption(fullName3, abbreviation3, String.Empty)
+                .Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-fs" });
+            Assert.True(result.IsSuccess);
+            Assert.True(result.GetFlagValue("-f"));
+            Assert.True(result.GetFlagValue("-s"));
+            Assert.Throws<ArgumentException>(() => result.GetFlagValue("-t"));
         }
     }
 }
