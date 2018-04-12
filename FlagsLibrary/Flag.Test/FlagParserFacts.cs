@@ -11,7 +11,11 @@ namespace Flag.Test
             var fullName = "flag";
             var description = "the first flag";
 
-            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, null, description).Build();
+            ArgsParser parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, null, description)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "--flag" });
 
@@ -26,7 +30,11 @@ namespace Flag.Test
             var abbrName = 'f';
             var description = "the first flag";
 
-            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(null, abbrName, description).Build();
+            ArgsParser parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(null, abbrName, description)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
@@ -38,7 +46,11 @@ namespace Flag.Test
         {
             var fullName = "flag";
             var abbreviation = 'f';
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviation, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviation, null)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] {"--flag"});
             Assert.True(result.IsSuccess);
@@ -51,7 +63,11 @@ namespace Flag.Test
             var abbreviation = 'f';
             var description = "the first flag";
 
-            var parser = new ArgsParserBuilder().AddFlagOption(null, abbreviation, description).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(null, abbreviation, description)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
 
@@ -66,7 +82,11 @@ namespace Flag.Test
             var fullName = "flag";
             char? abbreviation = 'f';
             var description = "the first flag";
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviation, description).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviation, description)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "--flag" });
 
@@ -81,7 +101,11 @@ namespace Flag.Test
             var abbrName = 'f';
             var description = "the first flag";
 
-            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
+            ArgsParser parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbrName, description)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
@@ -99,31 +123,34 @@ namespace Flag.Test
         {
             var description = "the first flag";
 
-            Assert.Throws<ArgumentNullException>(() => new ArgsParserBuilder().AddFlagOption(null, null, description).Build());
+            Assert.Throws<ArgumentNullException>(() => new ArgsParserBuilder()
+            .BeginDefaultCommand().AddFlagOption(null, null, description));
         }
 
         [Fact]
         public void should_throw_exception_when_add_flag_with_empty_full_name_and_null_abbr_name()
         {
-            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("", null, "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder()
+            .BeginDefaultCommand().AddFlagOption("", null, "description"));
         }
 
         [Fact]
         public void should_throw_exception_when_add_flag_with_null_full_name_and_empty_abbr_name()
         {
-            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption(null, default(char), "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder()
+            .BeginDefaultCommand().AddFlagOption(null, default(char), "description"));
         }
 
         [Fact]
         public void should_throw_exception_when_add_flag_with_invalid_full_name()
         {
-            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("-flag", 'f', "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().BeginDefaultCommand().AddFlagOption("-flag", 'f', "description"));
         }
 
         [Fact]
         public void should_throw_argument_exception_when_add_flag_with_abbreviation_name_is_not_letter()
         {
-            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().AddFlagOption("flag", '3', "description"));
+            Assert.Throws<ArgumentException>(() => new ArgsParserBuilder().BeginDefaultCommand().AddFlagOption("flag", '3', "description"));
         }
 
         [Fact]
@@ -133,7 +160,11 @@ namespace Flag.Test
             var abbrName = 'f';
             var description = "the first flag";
 
-            ArgsParser parser = new ArgsParserBuilder().AddFlagOption(fullName, abbrName, description).Build();
+            ArgsParser parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbrName, description)
+                .EndCommand()
+                .Build();
             ArgsParsingResult result = parser.Parser(new[] { "-f", "freeValueFlag" });
 
             Assert.False(result.IsSuccess);
@@ -150,7 +181,12 @@ namespace Flag.Test
             var fullName2 = "flagSecond";
             var abbreviation2 = 'S';
 
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName1, abbreviation1, null).AddFlagOption(fullName2, abbreviation2, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName1, abbreviation1, null)
+                .AddFlagOption(fullName2, abbreviation2, null)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] {"--flag" });
             Assert.True(result.IsSuccess);
@@ -165,7 +201,9 @@ namespace Flag.Test
 
             var fullName2 = "flagSecond";
 
-            var builder = new ArgsParserBuilder().AddFlagOption(fullName1, abbreviation1, null);
+            var builder = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName1, abbreviation1, null);
             Assert.Throws<ArgumentException>(() => builder.AddFlagOption(fullName2, abbreviation1, null));
         }
 
@@ -177,7 +215,8 @@ namespace Flag.Test
 
             var abbreviation2 = 'S';
 
-            var builder = new ArgsParserBuilder().AddFlagOption(fullName1, abbreviation1, null);
+            var builder = new ArgsParserBuilder()
+                .BeginDefaultCommand().AddFlagOption(fullName1, abbreviation1, null);
             Assert.Throws<ArgumentException>(() => builder.AddFlagOption(fullName1, abbreviation2, null));
         }
 
@@ -187,7 +226,10 @@ namespace Flag.Test
             var fullName1 = "flag";
             var fullName2 = "flagSecond";
 
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName1, null, null).AddFlagOption(fullName2,null,null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand().AddFlagOption(fullName1, null, null).AddFlagOption(fullName2,null,null)
+                .EndCommand()
+                .Build();
             ArgsParsingResult result = parser.Parser(new[] { "--flag" });
             Assert.True(result.IsSuccess);
         }
@@ -198,7 +240,10 @@ namespace Flag.Test
             var abbreviation1 = 'f';
             var abbreviation2 = 'S';
 
-            var parser = new ArgsParserBuilder().AddFlagOption(null, abbreviation1, null).AddFlagOption(null, abbreviation2, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand().AddFlagOption(null, abbreviation1, null).AddFlagOption(null, abbreviation2, null)
+                .EndCommand()
+                .Build();
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
         }
@@ -209,7 +254,11 @@ namespace Flag.Test
             var fullName = "flag";
             var abbreviation = 'f';
 
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviation, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviation, null)
+                .EndCommand()
+                .Build();
             Assert.Throws<ArgumentException>(() => parser.Parser(null));
         }
 
@@ -219,7 +268,11 @@ namespace Flag.Test
             var fullName = "flag";
             var abbreviation = 'f';
 
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviation, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviation, null)
+                .EndCommand()
+                .Build();
             Assert.Throws<ArgumentException>(() => parser.Parser(new[] {"-f", null}));
         }
 
@@ -228,7 +281,11 @@ namespace Flag.Test
         {
             var fullName = "flag";
             var abbreviationName = 'f';
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviationName, null)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "--second" });
             Assert.False(result.IsSuccess);
@@ -241,7 +298,10 @@ namespace Flag.Test
         {
             var fullName = "flag";
             var abbreviationName = 'f';
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand().AddFlagOption(fullName, abbreviationName, null)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-f", "-f" });
             Assert.False(result.IsSuccess);
@@ -254,7 +314,11 @@ namespace Flag.Test
         {
             var fullName = "flag";
             var abbreviationName = 'f';
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviationName, null)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-f", "--flag" });
             Assert.False(result.IsSuccess);
@@ -267,7 +331,11 @@ namespace Flag.Test
         {
             var fullName = "flag";
             var abbreviationName = 'f';
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviationName, null)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-f"});
             Assert.True(result.IsSuccess);
@@ -279,7 +347,11 @@ namespace Flag.Test
         {
             var fullName = "flag";
             var abbreviationName = 'f';
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviationName, null)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-S" });
             Assert.False(result.IsSuccess);
@@ -291,7 +363,11 @@ namespace Flag.Test
         {
             var fullName = "flag";
             var abbreviationName = 'f';
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviationName, null)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
@@ -303,7 +379,11 @@ namespace Flag.Test
         {
             var fullName = "flag";
             var abbreviationName = 'f';
-            var parser = new ArgsParserBuilder().AddFlagOption(fullName, abbreviationName, null).Build();
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName, abbreviationName, null)
+                .EndCommand()
+                .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-f" });
             Assert.True(result.IsSuccess);
@@ -311,21 +391,27 @@ namespace Flag.Test
         }
 
         [Fact]
-        void should_parse_valid_combined_flags_successfully()
+        void should_parse_valid_combined_flags_successfully_no_matter_the_order()
         {
             var fullName1 = "flag";
             var abbreviation1 = 'f';
             var fullName2 = "flagSecond";
             var abbreviation2 = 's';
             var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
                 .AddFlagOption(fullName1, abbreviation1, String.Empty)
                 .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .EndCommand()
                 .Build();
 
             var argsParsingResult = parser.Parser(new[] {"-fs"});
 
             Assert.True(argsParsingResult.IsSuccess);
             Assert.Null(argsParsingResult.Error);
+
+            var anotherOrderArgsParsingResult = parser.Parser(new[] { "-sf" });
+            Assert.True(anotherOrderArgsParsingResult.IsSuccess);
+            Assert.Null(anotherOrderArgsParsingResult.Error);
         }
 
         [Fact]
@@ -338,9 +424,11 @@ namespace Flag.Test
             var fullName3 = "flagThird";
             var abbreviation3 = 't';
             var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
                 .AddFlagOption(fullName1, abbreviation1, String.Empty)
                 .AddFlagOption(fullName2, abbreviation2, String.Empty)
                 .AddFlagOption(fullName3, abbreviation3, String.Empty)
+                .EndCommand()
                 .Build();
 
             var argsParsingResult = parser.Parser(new[] {"-sf", "-t"});
@@ -382,8 +470,10 @@ namespace Flag.Test
             var fullName2 = "flagSecond";
             var abbreviation2 = 's';
             var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
                 .AddFlagOption(fullName1, abbreviation1, String.Empty)
                 .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .EndCommand()
                 .Build();
 
             var argsParsingResult = parser.Parser(new[] {"-fa"});
@@ -401,8 +491,10 @@ namespace Flag.Test
             var fullName2 = "flagSecond";
             var abbreviation2 = 's';
             var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
                 .AddFlagOption(fullName1, abbreviation1, String.Empty)
                 .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .EndCommand()
                 .Build();
 
             var argsParsingResult = parser.Parser(new[] {"-ff"});
@@ -420,8 +512,10 @@ namespace Flag.Test
             var fullName2 = "flagSecond";
             var abbreviation2 = 's';
             var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
                 .AddFlagOption(fullName1, abbreviation1, String.Empty)
                 .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .EndCommand()
                 .Build();
 
             var argsParsingResult = parser.Parser(new[] { "-fs", "--flag" });
@@ -439,13 +533,39 @@ namespace Flag.Test
             var fullName2 = "flagSecond";
             var abbreviation2 = 's';
             var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
                 .AddFlagOption(fullName1, abbreviation1, String.Empty)
                 .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .EndCommand()
                 .Build();
 
             ArgsParsingResult result = parser.Parser(new[] { "-fs" });
             Assert.True(result.IsSuccess);
             Assert.Throws<ArgumentException>(() => result.GetFlagValue("fs"));
+        }
+
+        [Fact]
+        public void should_throw_ArgumentException_when_get_the_third_flag_value_without_parse_the_third_flag()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+            var fullName2 = "flagSecond";
+            var abbreviation2 = 's';
+            var fullName3 = "flagThird";
+            var abbreviation3 = 't';
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .AddFlagOption(fullName2, abbreviation2, String.Empty)
+                .AddFlagOption(fullName3, abbreviation3, String.Empty)
+                .EndCommand()
+                .Build();
+
+            ArgsParsingResult result = parser.Parser(new[] { "-fs" });
+            Assert.True(result.IsSuccess);
+            Assert.True(result.GetFlagValue("-f"));
+            Assert.True(result.GetFlagValue("-s"));
+            Assert.Throws<ArgumentException>(() => result.GetFlagValue("-t"));
         }
     }
 }
