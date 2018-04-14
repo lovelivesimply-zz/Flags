@@ -9,7 +9,7 @@ namespace Flag
     {
 
         internal readonly ArgsParser parser = new ArgsParser();
-
+        internal bool hasDafaultCommand = false;
         /// <summary>
         /// used to add flag option
         /// </summary>
@@ -26,6 +26,8 @@ namespace Flag
 
         public CommandBuilder BeginDefaultCommand()
         {
+            if (hasDafaultCommand) throw new InvalidOperationException();
+            hasDafaultCommand = true;
             return new CommandBuilder(this);
         }
     }

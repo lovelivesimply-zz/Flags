@@ -452,9 +452,11 @@ namespace Flag.Test
             var fullName3 = "flagThird";
             var abbreviation3 = 't';
             var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
                 .AddFlagOption(fullName1, abbreviation1, String.Empty)
                 .AddFlagOption(fullName2, abbreviation2, String.Empty)
                 .AddFlagOption(fullName3, abbreviation3, String.Empty)
+                .EndCommand()
                 .Build();
 
             var argsParsingResult = parser.Parser(new[] { "-fs", "-t" });
@@ -483,7 +485,7 @@ namespace Flag.Test
             Assert.Equal("-fa", argsParsingResult.Error.Trigger);
         }
 
-         [Fact]
+        [Fact]
         void should_return_DuplicateFlagsInArgs_error_code_when_combined_flags_contain_duplicate_flags_abbreviation()
         {
             var fullName1 = "flag";
@@ -566,6 +568,19 @@ namespace Flag.Test
             Assert.True(result.GetFlagValue("-f"));
             Assert.True(result.GetFlagValue("-s"));
             Assert.Throws<ArgumentException>(() => result.GetFlagValue("-t"));
+        }
+
+        [Fact]
+        void should_throw_invalidOperationException_error_when_ArgsParserBuilder_has_default_command_when_call_endCommand()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+            var parser = new ArgsParserBuilder();
+            parser.BeginDefaultCommand().AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .EndCommand();
+
+            Assert.Throws<InvalidOperationException>(() => parser.BeginDefaultCommand().AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .EndCommand());
         }
     }
 }
