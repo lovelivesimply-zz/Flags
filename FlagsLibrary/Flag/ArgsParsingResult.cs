@@ -6,12 +6,14 @@ namespace Flag
     public class ArgsParsingResult
     {
         internal List<FlagOption> FlagOptions = new List<FlagOption>();
+        public ICommandDefinitionMetadata Command { get; }
 
         public ArgsParsingResult(bool isSuccess, List<FlagOption> flagOptions, Error error)
         {
             IsSuccess = isSuccess;
             FlagOptions = flagOptions;
             Error = error;
+            Command = new CommandDefinitionMetadata();
         }
 
         public ArgsParsingResult()
