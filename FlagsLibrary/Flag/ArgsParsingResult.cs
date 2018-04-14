@@ -13,7 +13,7 @@ namespace Flag
             IsSuccess = isSuccess;
             FlagOptions = flagOptions;
             Error = error;
-            Command = new CommandDefinitionMetadata();
+            if (isSuccess) Command = new CommandDefinitionMetadata();
         }
 
         public ArgsParsingResult()

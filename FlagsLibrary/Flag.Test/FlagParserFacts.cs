@@ -584,7 +584,7 @@ namespace Flag.Test
         }
 
         [Fact]
-        void command_symbol_should_be_null_when_add_default_command()
+        void should_be_null_get_command_symbol_when_add_default_command()
         {
             var fullName1 = "flag";
             var abbreviation1 = 'f';
@@ -597,6 +597,22 @@ namespace Flag.Test
 
             Assert.NotNull(result.Command);
             Assert.Null(result.Command.Symbol);
+        }
+
+        [Fact]
+        void should_return_null_when_get_command_if_parse_fail()
+        {
+            var fullName1 = "flag";
+            var abbreviation1 = 'f';
+            var parser = new ArgsParserBuilder()
+                .BeginDefaultCommand()
+                .AddFlagOption(fullName1, abbreviation1, String.Empty)
+                .EndCommand()
+                .Build();
+            var result = parser.Parser(new[] { "-e" });
+
+            Assert.False(result.IsSuccess);
+            Assert.Null(result.Command);
         }
     }
 }
