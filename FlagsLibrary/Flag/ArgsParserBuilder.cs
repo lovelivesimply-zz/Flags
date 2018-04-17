@@ -24,6 +24,11 @@ namespace Flag
             return parser;
         }
 
+
+        /// <summary>
+        /// begin to build command
+        /// </summary>
+        /// <returns>return command builder to add flag option and build command</returns>
         public CommandBuilder BeginDefaultCommand()
         {
             if (hasDafaultCommand) throw new InvalidOperationException();

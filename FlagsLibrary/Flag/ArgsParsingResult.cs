@@ -6,8 +6,17 @@ namespace Flag
     public class ArgsParsingResult
     {
         internal List<FlagOption> FlagOptions = new List<FlagOption>();
+        /// <summary>
+        /// get the command definition metadata for parser
+        /// </summary>
         public ICommandDefinitionMetadata Command { get; }
 
+        /// <summary>
+        /// Create parsing result with success status, parsing flag options and error info
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        /// <param name="flagOptions"></param>
+        /// <param name="error">null if has no error</param>
         public ArgsParsingResult(bool isSuccess, List<FlagOption> flagOptions, Error error)
         {
             IsSuccess = isSuccess;
