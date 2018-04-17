@@ -571,7 +571,7 @@ namespace Flag.Test
         }
 
         [Fact]
-        void should_throw_invalidOperationException_error_when_ArgsParserBuilder_has_default_command_when_call_endCommand()
+        void should_throw_invalidOperationException_error_when_define_default_command_secondly()
         {
             var fullName1 = "flag";
             var abbreviation1 = 'f';
@@ -579,8 +579,7 @@ namespace Flag.Test
             parser.BeginDefaultCommand().AddFlagOption(fullName1, abbreviation1, String.Empty)
                 .EndCommand();
 
-            Assert.Throws<InvalidOperationException>(() => parser.BeginDefaultCommand().AddFlagOption(fullName1, abbreviation1, String.Empty)
-                .EndCommand());
+            Assert.Throws<InvalidOperationException>(() => parser.BeginDefaultCommand());
         }
 
         [Fact]
